@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    build:
+      context: .
+      args:
+        - IMAGE_VERSION=${IMAGE_VERSION}
+    container_name: ${SERVICE_NAME:-rabbitmq_local}
+    hostname: ${RABBITMQ_HOSTNAME:-rabbitmq-local}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    env_file:
+      - .env
+    ports:
+      - "${RABBITMQ_NODE_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+    networks:
+      - rabbitmq_network
+
+networks:
+  rabbitmq_network:
+    driver: bridge
+    name: ${NETWORK_NAME:-rabbitmq_network}
